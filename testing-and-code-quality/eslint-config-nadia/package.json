@@ -1,0 +1,11 @@
+{
+  "name": "eslint-config-nadia",
+  "version": "1.0.0",
+  "description": "Shareable ESLint configuration for the Nadia project.",
+  "main": "index.js",
+  "author": "Jon Peck",
+  "license": "MIT",
+  "peerDependencies": {
+    "eslint": ">=7"
+  }
+}
