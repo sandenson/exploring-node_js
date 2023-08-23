@@ -81,16 +81,27 @@ describe('validate', () => {
 		await expect(reservations.validate(reservation))
 			.rejects.toBeInstanceOf(Error)
 	})
+
+	it('should be called and reject empty input', async () => {
+		const mock = jest.spyOn(reservations, 'validate')
+
+		const value = undefined
+
+		await expect(reservations.validate(value))
+			.rejects.toThrow('Cannot read properties of undefined (reading \'validate\')')
+
+		expect(mock).toBeCalledWith(value)
+
+		mock.mockRestore()
+	})
 })
 
 describe('create', () => {
 	let reservations;
 
-	beforeAll(() => {
-		reservations = require('./reservations')
-	})
-
 	it('should reject if validation fails', async () => {
+		reservations = require('./reservations')
+
 		// Store the original
 		const original = reservations.validate;
 
@@ -107,4 +118,57 @@ describe('create', () => {
 		// Restore
 		reservations.validate = original
 	})
+
+	it('should resolve the stored date if successful', async () => {
+		// Prepare to require
+		const expectedInsertId = 1;
+
+		const mockInsert = jest.fn().mockResolvedValue([expectedInsertId])
+
+		jest.mock('./knex', () => () => ({
+			insert: mockInsert
+		}))
+
+		reservations = require('./reservations')
+
+		// Store the original
+		const mockValidation = jest.spyOn(reservations, 'validate')
+
+		// Mock validation
+		mockValidation.mockImplementation(value => Promise.resolve(value))
+
+		// Prepare test data
+		const reservation = { foo: 'bar' }
+
+		// Execute and check
+
+		await expect(reservations.create(reservation))
+			.resolves.toStrictEqual(expectedInsertId)
+
+		expect(reservations.validate).toHaveBeenCalledTimes(1)
+		expect(mockValidation).toBeCalledWith(reservation)
+		expect(mockValidation).toBeCalledTimes(1)
+
+		mockValidation.mockRestore()
+		jest.unmock('./knex')
+	})
+
+	// it('should reject if validation fails with spyOn', async () => {
+	// 	reservations = require('./reservations')
+	// 	const mock = jest.spyOn(reservations, 'validate')
+
+	// 	const error = new Error('fail')
+
+	// 	// this shit is (intentionally) treated by jest as an unhandled exception and kills the test run
+	// 	mock.mockImplementation(() => Promise.reject(error))
+
+	// 	const value = 'puppy'
+
+	// 	await expect(reservations.create(value).rejects.toEqual(error))
+
+	// 	expect(mock).toHaveBeenCalledTimes(1)
+	// 	expect(mock).toHaveBeenCalledWith(value)
+
+	// 	mock.mockRestore()
+	// })
 })
