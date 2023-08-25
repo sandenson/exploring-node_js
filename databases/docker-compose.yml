@@ -1,0 +1,8 @@
+version: '3.8'
+name: nodejs-databases-shopper
+services:
+  shopper_mongo:
+    image: mongo
+    container_name: shopper_mongo
+    ports:
+      - '37017:27017'
