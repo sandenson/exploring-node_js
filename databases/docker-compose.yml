@@ -6,3 +6,8 @@ services:
     container_name: shopper_mongo
     ports:
       - '37017:27017'
+  shopper_redis:
+    image: redis
+    container_name: shopper_redis
+    ports:
+      - '7379:6379'

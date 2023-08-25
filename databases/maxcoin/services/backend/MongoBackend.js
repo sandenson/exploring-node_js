@@ -58,6 +58,7 @@ class MongoBackend {
       if (ping.ok !== 1) {
         throw new Error('Connecting to MongoDB failed!')
       }
+      console.info('Successfully connected to MongoDB')
     } catch (error) {
       throw new Error('Connecting to MongoDB failed!')
     }
