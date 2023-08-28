@@ -19,8 +19,10 @@ class MongoBackend {
     const mongoClient = new MongoClient(this.mongoUrl, {
       directConnection: true,
     })
+    
     this.client = await mongoClient.connect()
     this.collection = this.client.db('maxcoin').collection('values')
+
     return this.client
   }
 
@@ -37,7 +39,7 @@ class MongoBackend {
     const documents = Object.entries(data.bpi).map((entry) => ({
       date: entry[0],
       value: entry[1],
-    }))
+    }));
 
     return this.collection.insertMany(documents)
   }

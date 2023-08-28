@@ -54,8 +54,6 @@ module.exports = (config) => {
         let basketCount = 0;
         const basketContents = await basket.getAll();
 
-        console.log('basketContents', basketContents)
-
         if (basketContents) {
           basketCount = Object.values(basketContents)
             .reduce((a, b) => a + parseInt(b, 10), basketCount)

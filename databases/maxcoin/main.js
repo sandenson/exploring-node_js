@@ -1,5 +1,8 @@
+const path = require('path')
+require('dotenv').config({ path: path.resolve('..', '.env') })
 const MongoBackend = require('./services/backend/MongoBackend')
 const RedisBackend = require('./services/backend/RedisBackend')
+const MySQLBackend = require('./services/backend/MySQLBackend')
 
 async function runMongo() {
   const mongoBackend = new MongoBackend()
@@ -11,7 +14,12 @@ async function runRedis() {
   return redisBackend.max()
 }
 
-runRedis()
+async function runMySQL() {
+  const mySQLBackend = new MySQLBackend()
+  return mySQLBackend.max()
+}
+
+runMySQL()
   .then((result) => {
     console.log(result);
   })
