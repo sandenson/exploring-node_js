@@ -3,6 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const util = require('util');
 
+const config = require('../../server/config').test;
+const log = config.log()
+
 let AvatarService = null;
 let db = null;
 let UserModel = null;
@@ -11,24 +14,22 @@ try {
   // eslint-disable-next-line import/no-unresolved
   db = require('../../server/lib/db');
 } catch (err) {
-  console.log('db ignored');
+  log.info('db ignored');
 }
 
 try {
   // eslint-disable-next-line import/no-unresolved
   UserModel = require('../../server/models/UserModel');
 } catch (err) {
-  console.log('UserModel ignored');
+  log.info('UserModel ignored');
 }
 
 try {
   // eslint-disable-next-line import/no-unresolved
   AvatarService = require('../../server/services/AvatarService');
 } catch (err) {
-  console.log('Avatars ignored');
+  log.info('Avatars ignored');
 }
-
-const config = require('../../server/config').test;
 
 const fsReaddir = util.promisify(fs.readdir);
 const fsUnlink = util.promisify(fs.unlink);

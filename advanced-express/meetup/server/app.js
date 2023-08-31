@@ -1,8 +1,10 @@
 const express = require('express');
+const helmet = require('helmet')
 const cookieParser = require('cookie-parser')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')
 const path = require('path');
+const compression = require('compression')
 const createError = require('http-errors');
 const mongoose = require('mongoose');
 const routes = require('./routes');
@@ -13,6 +15,9 @@ const AvatarService = require('./services/AvatarService')
 
 module.exports = (config) => {
   const app = express();
+  app.use(helmet())
+  app.use(compression())
+
   const speakers = new SpeakerService(config.data.speakers);
   const feedback = new FeedbackService(config.data.feedback);
   const avatars = new AvatarService(config.data.avatars)
@@ -28,14 +33,31 @@ module.exports = (config) => {
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser())
 
-  app.use(session({
-    secret: 'very secret 12345',
-    resave: true,
-    saveUninitialized: false,
-    store: new MongoStore({
-      client: mongoose.connection.getClient(),
-    })
-  }))
+  if (app.get('env') === 'production') {
+    app.set('trust proxy', 'loopback')
+    app.use(session({
+      secret: 'another very secret 12345',
+      name: 'sessionId',
+      proxy: true,
+      cookie: {
+        secure: true,
+      },
+      resave: true,
+      saveUninitialized: false,
+      store: new MongoStore({
+        client: mongoose.connection.getClient(),
+      })
+    }))
+  } else {
+    app.use(session({
+      secret: 'very secret 12345',
+      resave: true,
+      saveUninitialized: false,
+      store: new MongoStore({
+        client: mongoose.connection.getClient(),
+      })
+    }))
+  }
 
   app.use(auth.initialize)
   app.use(auth.session)

@@ -1,4 +1,7 @@
 const express = require('express');
+const config = require('../../config')[process.env.NODE_ENV || 'development']
+
+const log = config.log()
 
 const router = express.Router();
 module.exports = (params) => {
@@ -15,8 +18,8 @@ module.exports = (params) => {
     // This will fall through and create a NOT FOUND
     if (!speaker) return next();
     const artwork = await speakers.getArtworkForSpeaker(req.params.name);
-    console.log(speaker);
-    console.log(artwork);
+    log.debug(speaker);
+    log.debug(artwork);
     return res.render('speakers/detail', {
       page: req.params.name, artwork, speaker,
     });
