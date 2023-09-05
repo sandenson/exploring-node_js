@@ -9,6 +9,7 @@ const session = require('cookie-session');
 
 // This is the root file of the routing structure
 const indexRouter = require('./routes/index');
+const UserService = require('./services/UserService');
 
 // This is a simple helper that avoids 404 errors when
 // the browser tried to look for a favicon file
@@ -54,7 +55,7 @@ module.exports = (config) => {
       saveUninitialized: true,
       sameSite: 'strict',
       maxAge: null,
-    })
+    }),
   );
 
   // See express body parsers for more information
@@ -62,9 +63,21 @@ module.exports = (config) => {
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
 
-  /**
-   * @todo: Implement a middleware that restores the user from the database if `userId` is present on the session
-   */
+  app.use(async (req, res, next) => {
+    const { userId } = req.session;
+
+    if (!userId) return next();
+    const user = await UserService.findById(userId);
+
+    if (!user) {
+      req.session.userId = null;
+      return next();
+    }
+
+    req.user = user;
+    res.locals.user = user;
+    return next();
+  });
 
   // This sets up 'flash messaging'
   // With that, we can store messages to the user in the session

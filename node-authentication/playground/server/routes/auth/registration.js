@@ -28,6 +28,8 @@ module.exports = () => {
     validation.validatePasswordMatch,
     async (req, res, next) => {
       try {
+        const { username, email, password } = req.body;
+
         // This block deals with processing the validation input
         const validationErrors = validation.validationResult(req);
         const errors = [];
@@ -40,10 +42,8 @@ module.exports = () => {
             });
           });
         } else {
-          const existingEmail = await UserService.findByEmail(req.body.email);
-          const existingUsername = await UserService.findByUsername(
-            req.body.username
-          );
+          const existingEmail = await UserService.findByEmail(email);
+          const existingUsername = await UserService.findByUsername(username);
 
           if (existingEmail || existingUsername) {
             errors.push('email');
@@ -66,14 +66,8 @@ module.exports = () => {
           });
         }
 
-        /**
-         * @todo: Provide a method in UserService that will create a new user
-         */
-        await UserService.createUser(
-          req.body.username,
-          req.body.email,
-          req.body.password
-        );
+        await UserService.createUser(username, email, password);
+
         req.session.messages.push({
           text: 'Your account was created!',
           type: 'success',
@@ -83,7 +77,7 @@ module.exports = () => {
       } catch (err) {
         return next(err);
       }
-    }
+    },
   );
 
   return router;
