@@ -1,0 +1,11 @@
+version: '3.8'
+name: building-node-restful-apis
+services:
+  express_mongo:
+    image: mongo
+    container_name: express_mongo
+    ports:
+      - '27017:27017'
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGODB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGODB_PASSWORD}
