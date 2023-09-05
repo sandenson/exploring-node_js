@@ -9,7 +9,7 @@ const session = require('cookie-session');
 
 // This is the root file of the routing structure
 const indexRouter = require('./routes/index');
-const UserService = require('./services/UserService');
+const setupPassport = require('./lib/passport');
 
 // This is a simple helper that avoids 404 errors when
 // the browser tried to look for a favicon file
@@ -22,6 +22,7 @@ function ignoreFavicon(req, res, next) {
 
 module.exports = (config) => {
   const app = express();
+  const passport = setupPassport(config);
   // Just in case we need to log something later
   // const { logger } = config;
 
@@ -63,21 +64,13 @@ module.exports = (config) => {
   app.use(express.urlencoded({ extended: false }));
   app.use(cookieParser());
 
+  app.use(passport.initialize());
+  app.use(passport.session());
+
   app.use(async (req, res, next) => {
-    const { userId } = req.session;
-
-    if (!userId) return next();
-    const user = await UserService.findById(userId);
-
-    if (!user) {
-      req.session.userId = null;
-      return next();
-    }
-
     req.sessionOptions.maxAge =
       req.session.rememberMe || req.sessionOptions.maxAge;
-    req.user = user;
-    res.locals.user = user;
+    res.locals.user = req.user;
     return next();
   });
 
