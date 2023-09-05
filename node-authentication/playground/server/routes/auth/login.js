@@ -56,6 +56,13 @@ module.exports = () => {
         type: 'success',
       });
 
+      if (req.body.remember) {
+        req.sessionOptions.maxAge = 24 * 60 * 60 * 1000 * 14;
+        req.session.rememberMe = req.sessionOptions.maxAge;
+      } else {
+        req.sessionOptions.maxAge = null;
+      }
+
       return res.redirect('/');
     } catch (err) {
       return next(err);
@@ -68,6 +75,7 @@ module.exports = () => {
    */
   router.get('/logout', (req, res) => {
     req.session.userId = null;
+    req.session.rememberMe = null;
     req.session.messages.push({
       text: 'You are logged out!',
       type: 'info',

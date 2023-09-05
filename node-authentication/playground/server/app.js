@@ -74,6 +74,8 @@ module.exports = (config) => {
       return next();
     }
 
+    req.sessionOptions.maxAge =
+      req.session.rememberMe || req.sessionOptions.maxAge;
     req.user = user;
     res.locals.user = user;
     return next();
