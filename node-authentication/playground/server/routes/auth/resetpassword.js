@@ -33,10 +33,12 @@ module.exports = () => {
             });
           });
         } else {
-          /**
-           * @todo: Find the user and create a reset token
-           */
-          return next('Not implemented!');
+          const user = await UserService.findByEmail(req.body.email);
+          if (user) {
+            const resetToken = await UserService.createPasswordResetToken(
+              user.id,
+            );
+          }
         }
 
         if (errors.length) {
@@ -48,14 +50,16 @@ module.exports = () => {
           });
         }
 
-        /**
-         * @todo: On success, redirect the user to some other page, like the login page
-         */
-        return next('Not implemented!');
+        req.session.messages.push({
+          text: 'If we found a matching user, you will receive a password reset link.',
+          type: 'info',
+        });
+
+        return res.redirect('/');
       } catch (err) {
         return next(err);
       }
-    }
+    },
   );
 
   /**
@@ -63,10 +67,25 @@ module.exports = () => {
    */
   router.get('/resetpassword/:userId/:resetToken', async (req, res, next) => {
     try {
-      /**
-       * @todo: Validate the token and render the password change form if valid
-       */
-      return next('Not implemented!');
+      const { resetToken, userId } = req.params;
+      const valid = await UserService.verifyPasswordResetToken(
+        userId,
+        resetToken,
+      );
+
+      if (!valid) {
+        req.session.messages.push({
+          text: 'The provided token is invalid',
+          type: 'danger',
+        });
+        return res.redirect('/auth/resetpassword');
+      }
+
+      return res.render('auth/changepassword', {
+        page: 'resetpassword',
+        userId,
+        resetToken,
+      });
     } catch (err) {
       return next(err);
     }
@@ -78,9 +97,19 @@ module.exports = () => {
     validation.validatePasswordMatch,
     async (req, res, next) => {
       try {
-        /**
-         * @todo: Validate the provided credentials
-         */
+        const { userId, resetToken } = req.params;
+        const valid = await UserService.verifyPasswordResetToken(
+          userId,
+          resetToken,
+        );
+
+        if (!valid) {
+          req.session.messages.push({
+            text: 'The provided token is invalid!',
+            type: 'danger',
+          });
+          return res.redirect('/auth/resetpassword');
+        }
 
         const validationErrors = validation.validationResult(req);
         const errors = [];
@@ -105,14 +134,19 @@ module.exports = () => {
           });
         }
 
-        /**
-         * @todo: Change password, remove token and redirect to login
-         */
-        return next('Not implemented!');
+        await UserService.changePassword(userId, req.body.password);
+        await UserService.deletePasswordResetToken(resetToken);
+
+        req.session.messages.push({
+          text: 'Your password was successfully changed!',
+          type: 'success',
+        });
+
+        return res.redirect('/auth/login');
       } catch (err) {
         return next(err);
       }
-    }
+    },
   );
 
   return router;

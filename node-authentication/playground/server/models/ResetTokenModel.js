@@ -18,7 +18,7 @@ const resetTokenSchema = mongoose.Schema(
   },
   {
     timestamps: true,
-  }
+  },
 );
 
 resetTokenSchema.index({ createdAt: 1 }, { expireAfterSeconds: 3600 });
