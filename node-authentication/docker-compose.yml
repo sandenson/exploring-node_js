@@ -3,7 +3,7 @@ name: node-authentication
 services:
   express_mongo:
     image: mongo
-    container_name: mongo
+    container_name: node-authentication-mongo
     ports:
       - '37017:27017'
     environment:

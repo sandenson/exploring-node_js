@@ -49,11 +49,7 @@ const server = http.createServer(app);
  */
 
 mongoose
-  .connect(config.database.dsn, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  })
+  .connect(config.database.dsn)
   .then(() => {
     config.database.status.connected = true;
     logger.info('Connected to MongoDB');
