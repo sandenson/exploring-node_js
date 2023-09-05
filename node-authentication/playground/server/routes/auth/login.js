@@ -35,7 +35,7 @@ module.exports = () => {
           req.sessionOptions.maxAge = null;
         }
 
-        return res.redirect('/');
+        return res.redirect(req.session.returnTo || '/');
       } catch (err) {
         return next(err);
       }
