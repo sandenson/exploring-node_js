@@ -32,15 +32,16 @@
 
 <script>
 export default {
+  name: 'TodoItem',
   props: {
     description: { type: String, default: '' },
-    completed: { type: Boolean, default: false }
+    completed: { type: Boolean, default: false },
   },
   data() {
     return {
       oldTodoDescription: '',
       isEditing: false,
-      newTodoDescription: ''
+      newTodoDescription: '',
     };
   },
   methods: {
@@ -56,8 +57,8 @@ export default {
     finishEditing() {
       this.isEditing = false;
       this.$emit('on-edit', this.newTodoDescription);
-    }
-  }
+    },
+  },
 };
 </script>
 

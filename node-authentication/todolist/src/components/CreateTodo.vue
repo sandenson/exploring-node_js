@@ -13,7 +13,7 @@
 export default {
   data() {
     return {
-      newTodo: ''
+      newTodo: '',
     };
   },
   methods: {
@@ -22,8 +22,8 @@ export default {
         this.$emit('on-new-todo', this.newTodo);
       }
       this.newTodo = '';
-    }
-  }
+    },
+  },
 };
 </script>
 

@@ -26,7 +26,7 @@ module.exports = () => {
     try {
       const result = await TodolistService.updateItem(
         req.params.itemId,
-        req.body
+        req.body,
       );
       return res.json({ result });
     } catch (err) {

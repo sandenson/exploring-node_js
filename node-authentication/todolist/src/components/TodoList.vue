@@ -72,7 +72,7 @@ import Login from './Login.vue';
 export default {
   components: { Todo, CreateTodo, Login },
   props: {
-    listName: { type: String, default: 'Todo' }
+    listName: { type: String, default: 'Todo' },
   },
   data() {
     return {
@@ -81,7 +81,7 @@ export default {
       alertMessage: '',
       showLoader: false,
       jwt: null,
-      username: null
+      username: null,
     };
   },
 
@@ -119,7 +119,7 @@ export default {
         this.showLoader = true;
         const loginresult = await api.login(
           credentials.username,
-          credentials.password
+          credentials.password,
         );
         if (loginresult.jwt) {
           this.jwt = loginresult.jwt;
@@ -187,14 +187,14 @@ export default {
           this.jwt,
           todo._id,
           newTodoDescription,
-          todo.completed
+          todo.completed,
         );
         this.showLoader = false;
       } catch (err) {
         this.triggerError(err);
       }
-    }
-  }
+    },
+  },
 };
 </script>
 

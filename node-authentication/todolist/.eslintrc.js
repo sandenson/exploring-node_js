@@ -1,17 +1,16 @@
 module.exports = {
   root: true,
   env: {
-    browser: true
+    browser: true,
   },
   parserOptions: {
-    parser: 'babel-eslint',
-    sourceType: 'module'
+    parser: '@babel/eslint-parser',
+    sourceType: 'module',
   },
   extends: [
     'airbnb-base',
     'plugin:vue/recommended',
-    'prettier/vue',
-    'plugin:prettier/recommended'
+    'plugin:prettier/recommended',
   ],
   rules: {
     'comma-dangle': 'off',
@@ -24,9 +23,9 @@ module.exports = {
       'error',
       'kebab-case',
       {
-        ignores: []
-      }
+        ignores: [],
+      },
     ],
-    'prettier/prettier': ['error', { singleQuote: true, endOfLine: 'auto' }]
-  }
+    'prettier/prettier': ['error', { singleQuote: true, endOfLine: 'auto' }],
+  },
 };

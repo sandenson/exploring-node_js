@@ -57,10 +57,11 @@
 
 <script>
 export default {
+  name: 'LoginForm',
   data() {
     return {
       username: null,
-      password: null
+      password: null,
     };
   },
   methods: {
@@ -68,10 +69,10 @@ export default {
       if (this.username.length > 0 && this.password.length > 0) {
         this.$emit('on-login', {
           username: this.username,
-          password: this.password
+          password: this.password,
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>

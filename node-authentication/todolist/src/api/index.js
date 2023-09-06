@@ -16,8 +16,8 @@ export default {
       : `${baseurl}/api/todolist`;
     const response = await axios.get(rurl, {
       headers: {
-        Authorization: `Bearer ${jwt}`
-      }
+        Authorization: `Bearer ${jwt}`,
+      },
     });
     return response.data;
   },
@@ -29,9 +29,9 @@ export default {
       { description },
       {
         headers: {
-          Authorization: `Bearer ${jwt}`
-        }
-      }
+          Authorization: `Bearer ${jwt}`,
+        },
+      },
     );
     return response.data;
   },
@@ -43,9 +43,9 @@ export default {
       { description, completed },
       {
         headers: {
-          Authorization: `Bearer ${jwt}`
-        }
-      }
+          Authorization: `Bearer ${jwt}`,
+        },
+      },
     );
     return response.data;
   },
@@ -54,8 +54,8 @@ export default {
     const rurl = `${normalizedUrl}/api/todolist/${id}`;
     const response = await axios.delete(rurl, {
       headers: {
-        Authorization: `Bearer ${jwt}`
-      }
+        Authorization: `Bearer ${jwt}`,
+      },
     });
     return response.data;
   },
@@ -64,8 +64,8 @@ export default {
     const rurl = `${normalizedUrl}/api/whoami`;
     const response = await axios.get(rurl, {
       headers: {
-        Authorization: `Bearer ${jwt}`
-      }
+        Authorization: `Bearer ${jwt}`,
+      },
     });
     return response.data;
   },
@@ -74,5 +74,5 @@ export default {
     const rurl = `${normalizedUrl}/api/login`;
     const response = await axios.post(rurl, { username, password });
     return response.data;
-  }
+  },
 };
