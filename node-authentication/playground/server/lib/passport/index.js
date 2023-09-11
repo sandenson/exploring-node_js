@@ -1,6 +1,10 @@
 const passport = require('passport');
+const passportJWT = require('passport-jwt');
 const LocalStrategy = require('passport-local').Strategy;
 const UserService = require('../../services/UserService');
+
+const JWTStrategy = passportJWT.Strategy;
+const ExtractJWT = passportJWT.ExtractJwt;
 
 /**
  * This module sets up and configures passport
@@ -42,6 +46,23 @@ module.exports = (config) => {
             return done(null, false);
           }
 
+          return done(null, user);
+        } catch (err) {
+          return done(err);
+        }
+      },
+    ),
+  );
+
+  passport.use(
+    new JWTStrategy(
+      {
+        jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
+        secretOrKey: config.JWT_SECRET,
+      },
+      async ({ userId }, done) => {
+        try {
+          const user = await UserService.findById(userId);
           return done(null, user);
         } catch (err) {
           return done(err);

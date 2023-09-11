@@ -97,6 +97,7 @@ module.exports = () => {
     validation.validatePasswordMatch,
     async (req, res, next) => {
       try {
+        console.log('huh?');
         const { userId, resetToken } = req.params;
         const valid = await UserService.verifyPasswordResetToken(
           userId,
