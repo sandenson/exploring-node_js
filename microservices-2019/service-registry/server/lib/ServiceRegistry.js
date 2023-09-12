@@ -4,7 +4,7 @@ class ServiceRegistry {
   constructor(log) {
     this.log = log;
     this.services = {};
-    this.timeout = 10;
+    this.timeout = 30;
   }
 
   get(name, version) {
@@ -46,6 +46,8 @@ class ServiceRegistry {
     const key = name + version + ip + port;
 
     delete this.services[key];
+
+    this.log.debug(`Unregistered service ${name}, version ${version}, at ${ip}:${port}`);
 
     return key;
   }
