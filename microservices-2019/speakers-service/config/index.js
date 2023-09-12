@@ -18,6 +18,7 @@ module.exports = {
     log: () => getLogger(name, version, 'debug'),
     data: {
       speakers: path.join(__dirname, '../data/speakers.json'),
+      images: path.join(__dirname, '../data/images'),
     },
   },
   production: {
@@ -27,6 +28,7 @@ module.exports = {
     log: () => getLogger(name, version, 'info'),
     data: {
       speakers: path.join(__dirname, '../data/speakers.json'),
+      images: path.join(__dirname, '../data/images'),
     },
   },
   test: {
@@ -36,6 +38,7 @@ module.exports = {
     log: () => getLogger(name, version, 'fatal'),
     data: {
       speakers: path.join(__dirname, '../data/speakers.json'),
+      images: path.join(__dirname, '../data/images'),
     },
   },
 };

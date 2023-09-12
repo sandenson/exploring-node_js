@@ -1,10 +1,20 @@
 /* eslint-disable class-methods-use-this */
 const axios = require('axios');
+const { Readable } = require('stream');
 
 class SpeakersService {
   constructor({ serviceRegistryUrl, serviceVersionIdentifier }) {
     this.serviceRegistryUrl = serviceRegistryUrl;
     this.serviceVersionIdentifier = serviceVersionIdentifier;
+  }
+
+  async getImage(path) {
+    const { ip, port } = await this.getService('speakers-service');
+    return this.callService({
+      method: 'get',
+      responseType: 'stream',
+      url: `http://${ip}:${port}/images/${path}`,
+    });
   }
 
   async getNames() {
@@ -61,6 +71,8 @@ class SpeakersService {
       return response.data;
     } catch (err) {
       const response = await fetch(requestOptions.url);
+
+      if (requestOptions.responseType === 'stream') return Readable.fromWeb(response.body);
       return response.json();
     }
   }
