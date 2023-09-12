@@ -37,11 +37,22 @@ const userSchema = mongoose.Schema(
       unique: true,
       default: () => crypto.randomBytes(20).toString('hex'),
     },
+    oAuthProfiles: [
+      {
+        provider: { type: String },
+        profileId: { type: String },
+      },
+    ],
   },
   {
     timestamps: true,
   },
 );
+
+userSchema.index({
+  'oAuthProfiles.provider': 1,
+  'oAuthProfiles.profileId': 1,
+});
 
 async function generateHash(password) {
   return bcrypt.hash(password, 12);

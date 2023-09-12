@@ -54,7 +54,7 @@ module.exports = (params) => {
           req.params.provider,
           req.params.profileId
         );
-        user.oauthprofiles = [];
+        user.oAuthProfiles = [];
         await user.save();
         req.session.messages.push({
           text: 'GitHub was unlinked',
