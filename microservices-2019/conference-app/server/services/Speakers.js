@@ -1,11 +1,29 @@
 /* eslint-disable class-methods-use-this */
 const axios = require('axios');
-const { Readable } = require('stream');
+const crypto = require('crypto');
+const fs = require('fs');
+const path = require('path');
+const CircuitBreaker = require('../lib/CircuitBreaker');
+
+const circuitBreaker = new CircuitBreaker();
+
+const fsExists = async (filePath) => {
+  try {
+    await fs.promises.access(filePath, fs.constants.F_OK);
+    return true;
+  } catch (err) {
+    if (err.code === 'ENOENT') {
+      return false;
+    }
+    throw err;
+  }
+};
 
 class SpeakersService {
   constructor({ serviceRegistryUrl, serviceVersionIdentifier }) {
     this.serviceRegistryUrl = serviceRegistryUrl;
     this.serviceVersionIdentifier = serviceVersionIdentifier;
+    this.cache = {};
   }
 
   async getImage(path) {
@@ -66,15 +84,35 @@ class SpeakersService {
   }
 
   async callService(requestOptions) {
-    try {
-      const response = await axios(requestOptions);
-      return response.data;
-    } catch (err) {
-      const response = await fetch(requestOptions.url);
+    const servicePath = new URL(requestOptions.url).pathname;
 
-      if (requestOptions.responseType === 'stream') return Readable.fromWeb(response.body);
-      return response.json();
+    const cacheKey = crypto.createHash('md5').update(requestOptions.method + servicePath).digest('hex');
+
+    let cacheFile = null;
+
+    if (requestOptions.responseType && requestOptions.responseType === 'stream') {
+      cacheFile = path.resolve(process.cwd(), '_imagecache', cacheKey);
     }
+
+    const result = await circuitBreaker.callService(requestOptions);
+
+    if (!result) {
+      if (this.cache[cacheKey]) return this.cache[cacheKey];
+      if (cacheFile) {
+        const exists = await fsExists(cacheFile);
+        if (exists) return fs.createReadStream(cacheFile);
+      }
+      return false;
+    }
+
+    if (!cacheFile) {
+      this.cache[cacheKey] = result;
+    } else {
+      const ws = fs.createWriteStream(cacheFile);
+      result.pipe(ws);
+    }
+
+    return result;
   }
 
   async getService(serviceName) {
