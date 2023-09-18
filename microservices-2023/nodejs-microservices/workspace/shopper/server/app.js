@@ -1,7 +1,6 @@
 // Import necessary dependencies
 const express = require("express");
 const path = require("path");
-const bodyParser = require("body-parser");
 const session = require("express-session");
 const morgan = require("morgan");
 const RedisStore = require("connect-redis").default;
@@ -18,8 +17,8 @@ app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "views"));
 
 // Set up middleware
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 app.use(morgan("tiny")); // Log HTTP requests
 app.use(express.static(path.join(__dirname, "../client"))); // Serve static files
 

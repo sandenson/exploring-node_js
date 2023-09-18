@@ -2,6 +2,11 @@
 
 /* eslint-disable import/order */
 
+const path = require('path')
+require('dotenv').config({
+  path: path.resolve(__dirname, '../../../../.env')
+})
+
 // Import necessary dependencies
 // HTTP server functionality
 const config = require("../config"); // Configuration settings

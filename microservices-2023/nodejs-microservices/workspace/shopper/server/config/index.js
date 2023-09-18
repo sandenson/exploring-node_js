@@ -15,7 +15,7 @@ module.exports = {
   // MongoDB configuration
   mongodb: {
     // Connection URL for the MongoDB server
-    url: "mongodb://localhost:37017/shopper"
+    url: `mongodb://localhost:${process.env.MONGO_PORT}/shopper`
   },
 
   // Redis configuration
@@ -23,7 +23,7 @@ module.exports = {
     // Connection options for the Redis server
     options: {
       // Connection URL for the Redis server
-      url: "redis://localhost:7379"
+      url: `redis://localhost:${process.env.REDIS_PORT}`
     },
     // Placeholder for the Redis client, to be connected elsewhere
     client: null
