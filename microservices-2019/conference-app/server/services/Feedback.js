@@ -2,6 +2,7 @@
 const url = require('url');
 const axios = require('axios');
 const crypto = require('crypto');
+const amqplib = require('amqplib');
 
 const CircuitBreaker = require('../lib/CircuitBreaker');
 
@@ -12,6 +13,15 @@ class FeedbackService {
     this.serviceVersionIdentifier = serviceVersionIdentifier;
     this.serviceRegistryUrl = serviceRegistryUrl;
     this.cache = {};
+  }
+
+  async addEntry(name, title, message) {
+    const queue = 'feedback';
+    const connection = await amqplib.connect('amqp://localhost');
+    const channel = await connection.createChannel();
+    await channel.assertQueue(queue);
+    const queueMessage = JSON.stringify({ name, title, message });
+    return channel.sendToQueue(queue, Buffer.from(queueMessage, 'utf-8'));
   }
 
   async getList() {

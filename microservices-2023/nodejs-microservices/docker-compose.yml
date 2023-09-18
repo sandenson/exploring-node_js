@@ -1,0 +1,26 @@
+version: '3.0'
+name: microservices-2023
+services:
+  microservices-2023-mongo:
+    image: mongo
+    container_name: microservices-2023-mongo
+    ports:
+      - '27017:${MONGO_PORT}'
+  microservices-2023-redis:
+    image: redis
+    container_name: microservices-2023-redis
+    ports:
+      - '6379:${REDIS_PORT}'
+  microservices-2023-jaeger:
+    image: jaegertracing/all-in-one
+    container_name: microservices-2023-jaeger
+    ports:
+      - "16686:${JAEGER_PORT_1}"
+      - "4317:${JAEGER_PORT_2}"
+      - "4318:${JAEGER_PORT_3}"
+  microservices-2023-rabbitmq:
+    image: rabbitmq:management
+    container_name: microservices-2023-rabbitmq
+    ports:
+      - "5672:${RABBITMQ_PORT_1}"
+      - "15672:${RABBITMQ_PORT_2}"
