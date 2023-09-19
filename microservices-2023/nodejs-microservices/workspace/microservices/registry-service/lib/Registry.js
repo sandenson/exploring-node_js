@@ -24,15 +24,18 @@ class Registry {
     register(name, version, ip, port) {
         this.cleanup()
         
-        const key = this.getKey(name, version, ip, port)
+        const coercedVersion = semver.coerce(version)
+        const key = this.getKey(name, coercedVersion, ip, port)
 
         if (!this.services[key]) {
+            if (!semver.valid(coercedVersion)) return false
+
             this.services[key] = {
                 timestamp: Math.floor(new Date() / 1000),
                 ip,
                 port,
                 name,
-                version
+                version: coercedVersion
             }
 
             console.log(`Added service ${name} version ${version} at ${ip}:${port}`)
@@ -49,7 +52,7 @@ class Registry {
     unregister(name, version, ip, port) {
         this.cleanup()
         
-        const key = this.getKey(name, version, ip, port)
+        const key = this.getKey(name, semver.coerce(version), ip, port)
 
         delete this.services[key]
         console.log(`Deleted service ${name} version ${version} at ${ip}:${port}`)

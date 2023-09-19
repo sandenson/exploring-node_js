@@ -33,6 +33,10 @@ router.put('/register/:name/:version/:port', (req, res) => {
 
     const key = registry.register(name, version, ip, port)
 
+    if (!key) {
+        return res.status(400).json({ error: 'Invalid version number' })
+    }
+
     return res.json({ result: key })
 })
 
