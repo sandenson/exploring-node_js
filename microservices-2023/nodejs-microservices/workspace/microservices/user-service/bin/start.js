@@ -3,6 +3,10 @@
 
 // Import necessary dependencies
 // HTTP server functionality
+const path = require('path')
+require('dotenv').config({
+  path: path.resolve(__dirname, '../../../../.env')
+})
 const config = require("../config"); // Configuration settings
 
 // eslint-disable-next-line no-unused-vars

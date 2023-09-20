@@ -1,5 +1,6 @@
 const express = require("express");
 const CatalogService = require("../lib/CatalogService");
+const requireAdmin = require("../lib/requireAdmin");
 
 const router = express.Router();
 
@@ -37,7 +38,7 @@ router.get('/:id', async (req, res) => {
   }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', requireAdmin, async (req, res) => {
   try {
     const newItem = await CatalogService.create(req.body)
     return res.json(createResponse(newItem))
@@ -62,7 +63,7 @@ router.put('/:id', async (req, res) => {
   }
 })
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', requireAdmin, async (req, res) => {
   try {
     const deletion = await CatalogService.remove(req.params.id, req.body)
 

@@ -4,11 +4,11 @@ module.exports = {
   serviceName: pkg.name,
   serviceVersion: pkg.version,
   mongodb: {
-    url: "mongodb://localhost:37017/shopper"
+    url: `mongodb://localhost:${process.env.MONGO_PORT}/shopper`
   },
   redis: {
     options: {
-      url: "redis://localhost:7379"
+      url: `redis://localhost:${process.env.REDIS_PORT}`
     },
     client: null
   }
