@@ -1,6 +1,6 @@
 // Required modules and services are imported
 const express = require("express");
-const CatalogService = require("../../services/CatalogService");
+const CatalogClient = require("../../services/CatalogClient");
 const CartService = require("../../services/CartService");
 
 // Express router is instantiated
@@ -10,7 +10,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
   try {
     // Get all items from the catalog
-    const items = await CatalogService.getAll();
+    const items = await CatalogClient.getAll();
     // Render the 'shop' view and pass in the items
     res.render("shop", { items });
   } catch (err) {
