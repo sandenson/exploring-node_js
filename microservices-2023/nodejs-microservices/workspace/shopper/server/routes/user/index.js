@@ -1,13 +1,13 @@
 // Required modules and services are imported
 const express = require("express");
-const UserService = require("../../services/UserService");
+const UserServiceClient = require("../../services/UserServiceClient");
 
 // Express router is instantiated
 const router = express.Router();
 
 // Route to render all items in the catalog
 router.post("/login", async (req, res) => {
-  const authUser = await UserService.authenticate(
+  const authUser = await UserServiceClient.authenticate(
     req.body.email,
     req.body.password
   );
