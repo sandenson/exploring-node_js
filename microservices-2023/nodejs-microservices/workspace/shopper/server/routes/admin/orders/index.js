@@ -1,6 +1,6 @@
 // Import necessary modules
 const express = require("express");
-const OrderService = require("../../../services/OrderService");
+const OrderServiceClient = require("../../../services/OrderServiceClient");
 
 // Create a new Express router
 const router = express.Router();
@@ -8,8 +8,8 @@ const router = express.Router();
 // Route for getting all orders
 router.get("/", async (req, res, next) => {
   try {
-    // Use the OrderService to get all orders
-    const orders = await OrderService.getAll();
+    // Use the OrderServiceClient to get all orders
+    const orders = await OrderServiceClient.getAll();
 
     // Render the admin orders page with the orders data
     return res.render("admin/orders", { orders });
@@ -28,8 +28,8 @@ router.get("/", async (req, res, next) => {
 // Route for setting an order's status to "Shipped"
 router.get("/setshipped/:orderId", async (req, res) => {
   try {
-    // Use the OrderService to update the status of an order
-    await OrderService.setStatus(req.params.orderId, "Shipped");
+    // Use the OrderServiceClient to update the status of an order
+    await OrderServiceClient.setStatus(req.params.orderId, "Shipped");
 
     // Push a success message to the session
     req.session.messages.push({

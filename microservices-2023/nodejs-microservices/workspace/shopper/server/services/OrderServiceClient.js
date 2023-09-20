@@ -1,4 +1,4 @@
-/** @module OrderService */
+/** @module OrderServiceClient */
 const ServiceClient = require("./ServiceClient");
 
 /**
