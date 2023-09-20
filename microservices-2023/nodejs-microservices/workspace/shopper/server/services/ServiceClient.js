@@ -2,7 +2,7 @@ const axios = require('axios')
 const config = require('../config')
 
 function handleAxiosError(error) {
-    const errorMessage = (error.response && error.response.data && error.data.message) || error.message
+    const errorMessage = (error.response && error.response.data && error.response.data.message) || error.message
     return new Error(errorMessage)
 }
 
